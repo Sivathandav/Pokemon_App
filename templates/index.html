@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokémon App</title>
+</head>
+<body>
+    <h1>Welcome to Pokémon App</h1>
+
+    <!-- Search, Filter, and Sort Form -->
+    <form method="POST" action="/">
+        <input type="text" name="search_term" placeholder="Search Pokémon" value="{{ request.form.get('search_term') }}">
+        
+        <select name="type_filter">
+            <option value="">All Types</option>
+            {% for type in types %}
+                <option value="{{ type[0] }}" {% if request.form.get('type_filter') == type[0] %}selected{% endif %}>
+                    {{ type[0] }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <select name="sort_order">
+            <option value="id" {% if request.form.get('sort_order') == 'id' %}selected{% endif %}>Sort by ID</option>
+            <option value="name" {% if request.form.get('sort_order') == 'name' %}selected{% endif %}>Sort by Name</option>
+            <option value="height" {% if request.form.get('sort_order') == 'height' %}selected{% endif %}>Sort by Height</option>
+            <option value="weight" {% if request.form.get('sort_order') == 'weight' %}selected{% endif %}>Sort by Weight</option>
+        </select>
+
+        <button type="submit">Apply</button>
+    </form>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Height</th>
+                <th>Weight</th>
+                <th>Image</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for pokemon in pokemon %}
+                <tr>
+                    <td>{{ pokemon[0] }}</td>
+                    <td>{{ pokemon[1] }}</td>
+                    <td>{{ pokemon[2] }}</td>
+                    <td>{{ pokemon[3] }} cm</td>
+                    <td>{{ pokemon[4] }} kg</td>
+                    <td><img src="{{ pokemon[5] }}" alt="{{ pokemon[1] }}" width="100"></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
