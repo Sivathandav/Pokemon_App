@@ -4,13 +4,20 @@ import os
 
 app = Flask(__name__)
 
+# Get environment-specific variables
+DATABASE_URL = os.getenv('DATABASE_URL', 'postgresql://pokemon:af6Ad2z30j3VbnLYtnAPq4owlPq5QdPY@dpg-cu4dp0bqf0us738068p0-a.oregon-postgres.render.com/pokemon_kd3l')
+
+# DATABASE_URL = os.getenv('DATABASE_URL', 'postgresql://postgres:postgres@localhost:5432/pokemon_kd3l')
+is_deployment = os.getenv('IS_DEPLOYMENT', 'false') == 'true'  # Set this environment variable to 'true' when deploying
+
+# Set sslmode based on the environment (disable locally, require on deployment)
+sslmode = 'require' if is_deployment else 'disable'
+
 # Database connection
-DATABASE_URL = os.getenv('DATABASE_URL', 'postgresql://postgres:pongal%40546@localhost:5432/Pokemon')  # Corrected URL
-conn = psycopg2.connect(DATABASE_URL, sslmode='disable')
+conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 cursor = conn.cursor()
-
 @app.route('/', methods=['GET', 'POST'])
-
+ 
 def index():
     search_term = request.form.get('search_term', '')  # Search term from form
     type_filter = request.form.get('type_filter', '')  # Type filter from form
@@ -49,4 +56,4 @@ def index():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=False)
