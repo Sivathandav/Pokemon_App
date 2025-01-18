@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-scale=1.0">
     <title>Pokepedia - Pokémon App</title>
     <style>
         /* Reset and Base Styles */
@@ -17,13 +17,15 @@
             color: #fff;
             background: url('/static/images/yellow-mouse-ride-a-ball-background-free-vector.jpg') no-repeat center center fixed;
             background-size: cover;
-            height: 100vh;
+            background-position: center;
+            background-attachment: fixed;
+            height: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: flex-start;
             text-align: center;
-            overflow: hidden;  /* No scroll */
+            overflow-y: auto;
         }
 
         h1 {
@@ -33,204 +35,194 @@
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
 
+        /* Flex Container for Grid and Form */
+        .content-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start; /* Keep the grid on the left */
+            gap: 20px;
+            margin-top: 40px;
+            width: 100%;
+            max-width: 1200px;
+            padding: 20px;
+        }
+
         /* Form Styles */
         .form-container {
             display: flex;
-            flex-direction: column; /* Stack elements vertically */
-             align-items: center; /* Center elements horizontally */
+            flex-direction: column;
             gap: 10px;
-            padding: 10px 20px;
-            border-radius: 30px;
-            background: #3C59A5; 
-            margin-top: 40px;
-            width: 20%;
-            max-width: 1000px;
-            z-index: 1;
-            flex-wrap: wrap;
-            position: relative; /* Set relative positioning to move the container inside the layout */
-            left: calc(94% - 1000px); /* Align to the right side of the cards */
+            padding: 20px;
+            background: #3C59A5;
+            border-radius: 10px;
+            max-width: 300px;
+            margin-left: auto; /* Push the form container to the right */
         }
 
+        input, select, button {
+            padding: 8px 15px;
+            border: 2px solid #ddd;
+            border-radius: 25px;
+            font-size: 0.9em;
+            outline: none;
+            transition: all 0.3s ease;
+        }
 
-/* Input, Select, and Button Styles */
-input, select, button {
-    padding: 8px 15px; /* Reduced size for compactness */
-    border: 2px solid #ddd; /* Soft border for better definition */
-    border-radius: 25px;
-    font-size: 0.9em; /* Slightly smaller font size */
-    outline: none;
-    transition: all 0.3s ease;
-}
+        button {
+            background-color: #FFCC03;
+            color: white;
+            cursor: pointer;
+        }
 
-/* Input and Select Fields */
-input, select {
-    background: rgba(255, 255, 255, 0.85); /* Light transparent background */
-    color: #333;
-    border-color: #ccc; /* Lighter border */
-}
-
-/* Focus and Hover Effects for Input and Select */
-input:focus, select:focus {
-    background: rgba(255, 255, 255, 1); /* Opaque background on focus */
-    border-color: #007bff; /* Blue border on focus */
-}
-
-/* Button Styles */
-button {
-    background-color:#FFCC03; /* Blue Color */
-    color: white;
-    cursor: pointer;
-    border: 2px solid #FFCC03;
-}
-
-/* Hover Effects for Input, Select, and Button */
-input:hover, select:hover {
-    background: #f2f2f2;
-}
-
-button:hover {
-    background-color: #FFCC03; /* Darker Blue */
-    transform: scale(1.05);
-}
-
-/* Disabled Button */
-button:disabled {
-    background: #ccc;
-    cursor: not-allowed;
-}
+        button:hover {
+            background-color: #FFCC03;
+            transform: scale(1.05);
+        }
 
         /* Pokémon Grid Styles */
         .pokemon-grid {
             display: grid;
-            grid-template-columns: repeat(5, 1fr); /* Ensure 5 columns */
-            gap: 20px; /* Reduce the gap between cards */
-            padding: 15 10px; /* Reduce horizontal padding around the grid */
-            z-index: 1;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 20px;
+            padding: 15px;
             width: 100%;
             max-width: 1000px;
-            margin-top: 50px;
         }
 
-        /* Pokémon Card Styles */
         .pokemon-card {
-            max-width: 220px; /* Set a fixed width for each card */
-            text-align: center;
-            background-color: rgba(255, 255, 255, 0.4); /* Adjust transparency */
+            background-color: rgba(255, 255, 255, 0.4);
             color: #333;
             border-radius: 15px;
+            text-align: center;
             overflow: hidden;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
             transition: transform 0.3s ease, background-color 0.3s ease;
-            padding: 1px; /* Control padding inside the card */
         }
-
 
         .pokemon-card img {
             width: 100%;
-            height: 125px; /* Reduced height of images */
-            object-fit: cover;
-            border-radius: 10px;
+            height: 100%;
+            object-fit: contain;
+            max-height: 150px;
         }
 
         .pokemon-card h3 {
             margin: 15px 0;
-            font-size: 1.1em; /* Reduced font size */
-            color: #333;
-            font-weight: bold;
-        }
-
-        .pokemon-card p {
-            font-size: 0.9em;
-            color: #666;
-            margin: 5px 0;
-        }
-
-        .pokemon-card .pokemon-id {
-            font-size: 0.8em;
-            color: #888;
-            margin: 5px 0;
         }
 
         .pokemon-card:hover {
             transform: scale(1.05);
-            background-color: #FFCC03; /* Increased opacity on hover */
-            box-shadow: 0 8px 12px #3554AD;
+            background-color: #FFCC03;
         }
 
-        /* Pagination Styles */
-        .pagination {
+        /* Pokémon ID and Type in Horizontal Line */
+        .pokemon-card .pokemon-info {
             display: flex;
             justify-content: center;
-            align-items: center;
-            gap: 15px;
-            margin-top: 20px;
-            padding-bottom: 30px;
-            position: relative;
-            z-index: 2; /* Ensure pagination is always on top */
+            gap: 15px;  /* Small gap between ID and Type */
+            margin: 10px 0;
         }
 
-        .pagination button, .pagination a {
-            padding: 12px 18px;
-            border: none;
-            border-radius: 25px;
-            background-color: #3554AD; /* Blue Color */
-            color: white;
+        .pokemon-card .pokemon-id, .pokemon-card .pokemon-type {
+            padding: 8px 15px;
+            border-radius: 12px;
             font-size: 1em;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
+            font-weight: bold;
+            text-align: center;
+            display: inline-block;
         }
 
-        .pagination button:hover, .pagination a:hover {
-            background-color: #3554AD; /* Darker Blue */
-            transform: scale(1.05);
+        /* Styling for Pokémon ID (No underline) */
+        .pokemon-card .pokemon-id {
+            background-color: #FFCC03;
+            color: #010309;
+            font-size: 0.9em;
+            text-decoration: none;  /* Removed underline */
         }
 
-        .pagination button:disabled, .pagination a:disabled {
-            background: #ccc;
-            cursor: not-allowed;
+        /* Styling for Pokémon Type */
+        .pokemon-card .pokemon-type {
+            background-color: #3C59A5;
+            color: #fff;
         }
 
+        /* Responsive Adjustments */
+        @media (max-width: 1024px) {
+            .pokemon-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
 
+        @media (max-width: 768px) {
+            .pokemon-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .form-container {
+                width: 90%;
+                margin-left: auto;
+                margin-right: auto;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .pokemon-grid {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .form-container {
+                width: 95%;
+                margin-left: auto;
+                margin-right: auto;
+            }
+        }
+
+        
     </style>
 </head>
 <body>
+    <!-- Flex Container for Grid and Form -->
+    <div class="content-container">
+        <!-- Search and Filter Form -->
+        <form method="GET" class="form-container">
+            <input type="text" name="search_term" value="{{ search_term }}" placeholder="Search Pokémon">
 
+            <select name="sort_order">
+                <option value="id" {% if sort_order == 'id' %}selected{% endif %}>Sort by ID</option>
+                <option value="name" {% if sort_order == 'name' %}selected{% endif %}>Sort by Name</option>
+                <option value="weight" {% if sort_order == 'weight' %}selected{% endif %}>Sort by Weight</option>
+                <option value="height" {% if sort_order == 'height' %}selected{% endif %}>Sort by Height</option>
+            </select>
 
-    <!-- Search and Filter Form -->
-    <form method="GET" class="form-container">
-        <input type="text" name="search_term" value="{{ search_term }}" placeholder="Search Pokémon">
-        
-        <select name="sort_order">
-            <option value="id" {% if sort_order == 'id' %}selected{% endif %}>Sort by ID</option>
-            <option value="name" {% if sort_order == 'name' %}selected{% endif %}>Sort by Name</option>
-            <option value="weight" {% if sort_order == 'weight' %}selected{% endif %}>Sort by Weight</option>
-            <option value="height" {% if sort_order == 'height' %}selected{% endif %}>Sort by Height</option>
-        </select>
+            <select name="type_filter">
+                <option value="">Select Type</option>
+                {% for type in types %}
+                    <option value="{{ type }}" {% if type == type_filter %}selected{% endif %}>{{ type }}</option>
+                {% endfor %}
+            </select>
 
-        <select name="type_filter">
-            <option value="">Select Type</option>
-            {% for type in types %}
-                <option value="{{ type }}" {% if type == type_filter %}selected{% endif %}>{{ type }}</option>
+            <button type="submit">Apply</button>
+        </form>
+
+        <!-- Pokémon Grid -->
+        <div class="pokemon-grid">
+            {% for poke in pokemon %}
+            <div class="pokemon-card">
+                <a href="{{ url_for('pokemon_details', poke_id=poke[0]) }}">
+                    <img src="{{ poke[3] }}" alt="{{ poke[1] }}">
+                    <h3>{{ poke[1] }}</h3>
+                    <!-- Pokémon ID and Type displayed horizontally -->
+                    <div class="pokemon-info">
+                        <span class="pokemon-id">#{{ poke[0] }}</span> 
+                        <span class="pokemon-type">{{ poke[2] }}</span>
+                    </div>
+                </a>
+            </div>
             {% endfor %}
-        </select>
-    
-        <button type="submit">Apply</button>
-    </form>
-
-    <!-- Pokémon Grid -->
-    <div class="pokemon-grid">
-        {% for poke in pokemon %}
-        <div class="pokemon-card">
-            <a href="{{ url_for('pokemon_details', poke_id=poke[0]) }}">
-                <img src="{{ poke[3] }}" alt="{{ poke[1] }}">
-                <h3>{{ poke[1] }}</h3>
-                <p class="pokemon-id">ID: {{ poke[0] }}</p>
-                <p>Type: {{ poke[2] }}</p>
-            </a>
         </div>
-        {% endfor %}
-    </div>
 
     <!-- Pagination -->
     <div class="pagination">
